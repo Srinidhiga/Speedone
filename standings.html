@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formula One Standings</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Header Section -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="drivers.html">Drivers</a></li>
+                <li><a href="teams.html">Teams</a></li>
+                <li><a href="schedule.html">Schedule</a></li>
+                <li><a href="results.html">Results</a></li>
+                <li><a href="standings.html" class="active">Standings</a></li>
+                <li><a href="news.html">News</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Section -->
+    <main>
+        <h1>Formula One Standings</h1>
+        <p>Track the latest standings of the 2024 Formula One season.</p>
+
+        <div id="standings-table">
+            <!-- Standings table will be dynamically loaded here -->
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Formula One Hub. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/standings')
+                .then(response => response.json())
+                .then(data => {
+                    const standingsTable = document.getElementById('standings-table');
+                    const table = document.createElement('table');
+                    table.classList.add('standings-table');
+
+                    // Add table headers
+                    table.innerHTML = `
+                        <thead>
+                            <tr>
+                                <th>Position</th>
+                                <th>Driver</th>
+                                <th>Total Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map(driver => `
+                                <tr>
+                                    <td>${driver.position}</td>
+                                    <td>${driver.first_name} ${driver.last_name}</td>
+                                    <td>${driver.total_points}</td>
+                                </tr>`).join('')}
+                        </tbody>
+                    `;
+
+                    standingsTable.appendChild(table);
+                })
+                .catch(error => console.error('Error fetching standings:', error));
+        });
+    </script>
+</body>
+
+</html>

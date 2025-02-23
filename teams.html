@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formula One Teams</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Teams Page Styles */
+        main {
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        main h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #ff0000;
+        }
+
+        #teams-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .team-card {
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 10px;
+            text-align: center;
+            width: 350px;
+            padding: 15px;
+            color: #f4f4f4;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .team-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 15px rgba(255, 0, 0, 0.5);
+        }
+
+        .team-card img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .team-card h2 {
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+
+        .team-card p {
+            font-size: 1rem;
+            margin: 5px 0;
+        }
+
+        .drivers-list {
+            margin-top: 10px;
+        }
+
+        .drivers-list li {
+            list-style: none;
+            color: #ff0000;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header Section -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="drivers.html">Drivers</a></li>
+                <li><a href="teams.html" class="active">Teams</a></li>
+                <li><a href="schedule.html">Schedule</a></li>
+                <li><a href="results.html">Results</a></li>
+                <li><a href="standings.html">Standings</a></li>
+                <li><a href="news.html">News</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Section -->
+    <main>
+        <h1>Formula One Teams</h1>
+        <p>Explore the teams competing in the 2024 Formula One season.</p>
+
+        <div id="teams-list">
+            <!-- Team profiles will be dynamically loaded here -->
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; 2024 Formula One Hub. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/teams')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!Array.isArray(data)) {
+                        throw new Error('Invalid data format: Expected an array');
+                    }
+
+                    const teamsList = document.getElementById('teams-list');
+                    data.forEach(team => {
+                        const teamCard = document.createElement('div');
+                        teamCard.classList.add('team-card');
+                        teamCard.innerHTML = `
+                            <img src="${team.team_logo_url}" alt="${team.team_name}" />
+                            <h2>${team.team_name}</h2>
+                            <p><strong>Base:</strong> ${team.base_location}</p>
+                            <p><strong>Team Principal:</strong> ${team.team_principal}</p>
+                            <p><strong>Championships Won:</strong> ${team.championships_won}</p>
+                        `;
+                        teamsList.appendChild(teamCard);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching teams:', error);
+                    document.getElementById('teams-list').innerHTML = `
+                        <p class="error-message">Failed to load teams. Please try again later.</p>
+                    `;
+                });
+        });
+    </script>
+</body>
+
+</html>
